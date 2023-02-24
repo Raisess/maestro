@@ -27,8 +27,12 @@ class JobsManager:
     with open(file_path, "w") as file:
       file.write(job.get_command())
 
+  @staticmethod
   def Load(name: str) -> Job:
     file_path = f"{JOBS_DIR_PATH}/{name}"
+    if not os.path.exists(file_path):
+      raise Exception("This job don't exists")
+
     file = open(file_path, "r")
     job = Job(name, file.read())
     file.close()
