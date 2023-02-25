@@ -2,7 +2,8 @@
 
 from yacli import CLI, Command
 
-from managers import JobsManager, LogsManager
+from jobs_manager import JobsManager
+from logs_manager import LogsManager
 
 class CreateJob(Command):
   def __init__(self):

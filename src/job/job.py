@@ -14,11 +14,12 @@ class Job:
   def get_command(self) -> str:
     return self.__command
 
-  def run(self) -> None:
-    os.system(f"{self.__command} > {self.__get_logfile()} 2>&1 &")
+  def get_logs_path(self) -> str:
+    return f"{LOGS_DIR_PATH}/{self.__name}"
 
-  def __get_logfile(self) -> str:
-    return f"{LOGS_DIR_PATH}/{self.__name}/{self.__timestamp()}"
+  def run(self) -> None:
+    logfile = f"{self.get_logs_path()}/{self.__timestamp()}"
+    os.system(f"{self.__command} > {logfile} 2>&1 &")
 
   def __timestamp(self) -> int:
     return int(time.time_ns() / 100000)
