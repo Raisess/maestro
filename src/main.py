@@ -69,8 +69,10 @@ class ClearLogs(Command):
     super().__init__("clear-logs", "Clear all logs.")
 
   def handle(self, _: list[str]) -> None:
-    LogsManager.ClearAll()
-    print(">>> Logs cleaned!")
+    prompt = input("Are you sure you want to clear all logs? [Y/n] ")
+    if prompt.lower() == "y":
+      LogsManager.ClearAll()
+      print(">>> Logs cleaned!")
 
 
 if __name__ == "__main__":

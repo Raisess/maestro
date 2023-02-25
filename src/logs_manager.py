@@ -24,4 +24,6 @@ class LogsManager:
 
   @staticmethod
   def ClearAll() -> None:
-    shutil.rmtree(LOGS_DIR_PATH)
+    dirs = os.listdir(LOGS_DIR_PATH)
+    for dir in dirs:
+      shutil.rmtree(f"{LOGS_DIR_PATH}/{dir}")
