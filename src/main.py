@@ -22,11 +22,7 @@ class CreateJob(Command):
 
 class RunJob(Command):
   def __init__(self):
-    super().__init__(
-      "run",
-      "",
-      args_len=1
-    )
+    super().__init__("run", "Start a job.\n\t\tE.g.: maestro <name>", args_len=1)
 
   def handle(self, args: list[str]) -> None:
     job = JobsManager.Load(name=args[0])
@@ -36,7 +32,7 @@ class RunJob(Command):
 
 class ListJobs(Command):
   def __init__(self):
-    super().__init__("list", "")
+    super().__init__("list", "List logs from a specific job.\n\t\tE.g.: maestro <name>")
 
   def handle(self, _: list[str]) -> None:
     print(">>> Available jobs:")
