@@ -5,7 +5,7 @@ from env import LOGS_DIR_PATH
 
 class Job:
   def __init__(self, name: str, command: str):
-    self.__name = name.strip()
+    self.__name = name
     self.__command = command.strip()
 
   def get_name(self) -> str:
