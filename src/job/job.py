@@ -14,12 +14,17 @@ class Job:
   def get_command(self) -> str:
     return self.__command
 
-  def get_logs_path(self) -> str:
-    return f"{LOGS_DIR_PATH}/{self.__name}"
-
   def run(self) -> None:
-    logfile = f"{self.get_logs_path()}/{self.__timestamp()}"
+    self.__create_logs_dir()
+    logfile = f"{self.__get_logs_path()}/{self.__timestamp()}"
     os.system(f"{self.__command} > {logfile} 2>&1 &")
+
+  def __create_logs_dir(self) -> None:
+    if not os.path.isdir(self.__get_logs_path()):
+      os.mkdir(self.__get_logs_path())
+
+  def __get_logs_path(self) -> str:
+    return f"{LOGS_DIR_PATH}/{self.__name}"
 
   def __timestamp(self) -> int:
     return int(time.time_ns() / 100000)

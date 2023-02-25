@@ -13,11 +13,7 @@ class JobsManager:
 
   @staticmethod
   def Create(name: str, command: str) -> Job:
-    job = Job(name, command)
-    if not os.path.isdir(job.get_logs_path()):
-      os.mkdir(job.get_logs_path())
-
-    return job
+    return Job(name, command)
 
   @staticmethod
   def Save(job: Job) -> None:
