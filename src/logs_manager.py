@@ -1,8 +1,7 @@
 import os
-import shutil
 
 from env import LOGS_DIR_PATH
-from job.log import Log
+from models.log import Log
 
 class LogsManager:
   @staticmethod
@@ -10,9 +9,7 @@ class LogsManager:
     all_logs = []
     if os.path.isdir(LOGS_DIR_PATH):
       dir_path = LogsManager.__GetPath(job_name)
-      files = os.listdir(dir_path)
-      files.sort()
-      files.reverse()
+      files = LogsManager.__GetSortedFiles(dir_path)
       for filename in files:
         with open(f"{dir_path}/{filename}", "r") as log_file:
           data = log_file.read().split("\n")
@@ -24,13 +21,35 @@ class LogsManager:
   @staticmethod
   def Clear(job_name: str) -> None:
     dir_path = LogsManager.__GetPath(job_name)
-    shutil.rmtree(dir_path)
+    LogsManager.__ClearFiles(dir_path)
 
   @staticmethod
   def ClearAll() -> None:
-    dirs = os.listdir(LOGS_DIR_PATH)
-    for dir in dirs:
-      shutil.rmtree(f"{LOGS_DIR_PATH}/{dir}")
+    for dir in os.listdir(LOGS_DIR_PATH):
+      LogsManager.__ClearFiles(f"{LOGS_DIR_PATH}/{dir}")
+
+  @staticmethod
+  def __ClearFiles(dir_path: str) -> None:
+    files = LogsManager.__GetSortedFiles(dir_path)
+    for idx, file in enumerate(files):
+      path = f"{dir_path}/{file}"
+      if idx == 0:
+        LogsManager.__ClearFile(path)
+        continue
+
+      os.remove(path)
+
+  @staticmethod
+  def __ClearFile(path: str) -> None:
+    with open(path, "w") as f:
+      f.write("")
+
+  @staticmethod
+  def __GetSortedFiles(dir_path: str) -> list[str]:
+    files = os.listdir(dir_path)
+    files.sort()
+    files.reverse()
+    return files
 
   @staticmethod
   def __GetPath(job_name: str) -> str:
