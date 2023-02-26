@@ -21,6 +21,13 @@ def run() -> None:
   return redirect("/")
 
 
+@app.route("/remove", methods = ["POST"])
+def remove() -> None:
+  job_name = request.form.get("job_name")
+  JobsManager.Remove(job_name)
+  return redirect("/")
+
+
 @app.route("/logs", methods = ["GET"])
 def logs() -> str:
   job_name = request.args.get("job_name")

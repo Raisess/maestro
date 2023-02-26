@@ -38,6 +38,10 @@
                       <input name="job_name" value="{{ name }}" style="display: none;" />
                       <input class="dropdown-item" type="submit" value="Run" />
                     </form>
+                    <form action="/remove" method="POST">
+                      <input name="job_name" value="{{ name }}" style="display: none;" />
+                      <input class="dropdown-item" type="submit" value="Remove" />
+                    </form>
                     <form action="/logs" method="GET">
                       <input name="job_name" value="{{ name }}" style="display: none;" />
                       <input class="dropdown-item" type="submit" value="See logs" />

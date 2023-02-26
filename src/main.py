@@ -22,7 +22,7 @@ class CreateJob(Command):
 
 class RunJob(Command):
   def __init__(self):
-    super().__init__("run", "Start a job.\n\t\tE.g.: maestro <name>", args_len=1)
+    super().__init__("run", "Start a job.\n\t\tE.g.: maestro run <name>", args_len=1)
 
   def handle(self, args: list[str]) -> None:
     job = JobsManager.Load(name=args[0])
@@ -30,9 +30,18 @@ class RunJob(Command):
     print(">>> Job started successfully!")
 
 
+class RemoveJob(Command):
+  def __init__(self):
+    super().__init__("remove", "Remove a job.\n\t\tE.g.: maestro remove <name>", args_len=1)
+
+  def handle(self, args: list[str]) -> None:
+    JobsManager.Remove(name=args[0])
+    print(">>> Job removed successfully!")
+
+
 class ListJobs(Command):
   def __init__(self):
-    super().__init__("list", "List logs from a specific job.\n\t\tE.g.: maestro <name>")
+    super().__init__("list", "List logs from a specific job.")
 
   def handle(self, _: list[str]) -> None:
     print(">>> Available jobs:")
@@ -44,7 +53,7 @@ class CheckLogs(Command):
   def __init__(self):
     super().__init__(
       "logs",
-      "Get logs from a job and print it using `less`.\n\t\tE.g.: maestro <name>",
+      "Get logs from a job and print it using `less`.\n\t\tE.g.: maestro logs <name>",
       args_len=1
     )
 
@@ -90,6 +99,7 @@ if __name__ == "__main__":
   cli = CLI("maestro", [
     CreateJob(),
     RunJob(),
+    RemoveJob(),
     ListJobs(),
     CheckLogs(),
     ClearLogs(),
