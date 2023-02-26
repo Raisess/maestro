@@ -40,7 +40,6 @@ class ListJobs(Command):
       print(f">>>>>> {job_name}: {job_command}")
 
 
-
 class CheckLogs(Command):
   def __init__(self):
     super().__init__(
@@ -71,6 +70,26 @@ class ClearLogs(Command):
       print(">>> Logs cleaned!")
 
 
+class Serve(Command):
+  def __init__(self):
+    super().__init__(
+      "serve",
+      "Create a local server providing a web interface at http://localhost:<port>.\n\t\t"
+      "E.g.: maestro serve [port]"
+    )
+
+  def handle(self, args: list[str]) -> None:
+    from web.server import app
+    app.run(port=int(args[0]) if len(args) > 0 else 6969)
+
+
 if __name__ == "__main__":
-  cli = CLI("maestro", [CreateJob(), RunJob(), ListJobs(), CheckLogs(), ClearLogs()])
+  cli = CLI("maestro", [
+    CreateJob(),
+    RunJob(),
+    ListJobs(),
+    CheckLogs(),
+    ClearLogs(),
+    Serve()
+  ])
   cli.handle()

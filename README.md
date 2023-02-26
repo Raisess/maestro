@@ -39,3 +39,11 @@ maestro logs <name>
 ```shell
 maestro clear-logs
 ```
+
+**serve**: Create a local server providing a web interface at `http://localhost:<port>`.
+
+```shell
+maestro serve [port]
+```
+
+- NOTE: default `port` value is: `6969`.
