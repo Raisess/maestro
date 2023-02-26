@@ -1,15 +1,22 @@
+import json
 import os
 
-from env import DEFAULT_DIR_PATH, JOBS_DIR_PATH, LOGS_DIR_PATH
+from env import DEFAULT_DIR_PATH, JOBS_FILE_PATH, LOGS_DIR_PATH
 from job.job import Job
 
 class JobsManager:
   @staticmethod
   def InitPath() -> None:
-    dirs = [DEFAULT_DIR_PATH, JOBS_DIR_PATH, LOGS_DIR_PATH]
-    for dir in dirs:
-      if not os.path.isdir(dir):
-        os.mkdir(dir)
+    dirs = [DEFAULT_DIR_PATH, LOGS_DIR_PATH]
+    for path in dirs:
+      if not os.path.isdir(path):
+        os.mkdir(path)
+
+    files = [JOBS_FILE_PATH]
+    for path in files:
+      if not os.path.isfile(path):
+        file = open(path, "w")
+        file.close()
 
   @staticmethod
   def Create(name: str, command: str) -> Job:
@@ -17,24 +24,30 @@ class JobsManager:
 
   @staticmethod
   def Save(job: Job) -> None:
-    file_path = f"{JOBS_DIR_PATH}/{job.get_name()}"
-    with open(file_path, "w") as file:
-      file.write(job.get_command())
+    r_file = open(JOBS_FILE_PATH, "r")
+    content = r_file.read()
+    r_file.close()
+    if content == "":
+      content = "{}"
+
+    w_file = open(JOBS_FILE_PATH, "w")
+    data: dict = json.loads(content)
+    data[job.get_name()] = job.get_command()
+    w_file.write(json.dumps(data))
 
   @staticmethod
   def Load(name: str) -> Job:
-    file_path = f"{JOBS_DIR_PATH}/{name}"
-    if not os.path.exists(file_path):
-      raise Exception("This job don't exists")
+    file = open(JOBS_FILE_PATH, "r")
+    data: dict = json.load(file)
+    job_command = data.get(name)
+    if not job_command:
+      raise Exception("Job not found")
 
-    file = open(file_path, "r")
-    job = Job(name, file.read())
     file.close()
-    return job
+    return Job(name, job_command)
 
   @staticmethod
-  def ListNames() -> list[str]:
-    if not os.path.isdir(JOBS_DIR_PATH):
-      raise Exception("No jobs found")
-
-    return os.listdir(JOBS_DIR_PATH)
+  def List() -> list[tuple[str, str]]:
+    file = open(JOBS_FILE_PATH, "r")
+    data: dict = json.load(file)
+    return data.items()
