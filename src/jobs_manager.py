@@ -2,7 +2,7 @@ import json
 import os
 
 from env import DEFAULT_DIR_PATH, JOBS_FILE_PATH, LOGS_DIR_PATH
-from job.job import Job
+from models.job import Job
 
 class JobsManager:
   @staticmethod
