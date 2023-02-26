@@ -1,5 +1,6 @@
 import json
 import os
+import shutil
 
 from env import DEFAULT_DIR_PATH, JOBS_FILE_PATH, LOGS_DIR_PATH
 from models.job import Job
@@ -24,30 +25,43 @@ class JobsManager:
 
   @staticmethod
   def Save(job: Job) -> None:
-    r_file = open(JOBS_FILE_PATH, "r")
-    content = r_file.read()
-    r_file.close()
-    if content == "":
-      content = "{}"
-
-    w_file = open(JOBS_FILE_PATH, "w")
-    data: dict = json.loads(content)
+    data = JobsManager.__GetJobsFromFile()
     data[job.get_name()] = job.get_command()
-    w_file.write(json.dumps(data))
+    JobsManager.__UpdateJobsInFile(data)
 
   @staticmethod
   def Load(name: str) -> Job:
-    file = open(JOBS_FILE_PATH, "r")
-    data: dict = json.load(file)
-    job_command = data.get(name)
+    job_command = JobsManager.__GetJobsFromFile().get(name)
     if not job_command:
       raise Exception("Job not found")
 
-    file.close()
     return Job(name, job_command)
 
   @staticmethod
   def List() -> list[tuple[str, str]]:
-    file = open(JOBS_FILE_PATH, "r")
-    data: dict = json.load(file)
-    return data.items()
+    return JobsManager.__GetJobsFromFile().items()
+
+  @staticmethod
+  def Remove(name: str) -> None:
+    data = JobsManager.__GetJobsFromFile()
+    data.pop(name)
+    JobsManager.__UpdateJobsInFile(data)
+
+    logs_path = f"{LOGS_DIR_PATH}/{name}"
+    if os.path.isdir(logs_path):
+      shutil.rmtree(logs_path)
+
+  @staticmethod
+  def __GetJobsFromFile() -> dict[str, str]:
+    content = "{}"
+    with open(JOBS_FILE_PATH, "r") as file:
+      data = file.read()
+      if data != "":
+        content = data
+
+    return json.loads(content)
+
+  @staticmethod
+  def __UpdateJobsInFile(data: dict[str, str]) -> None:
+    with open(JOBS_FILE_PATH, "w") as file:
+      file.write(json.dumps(data))
