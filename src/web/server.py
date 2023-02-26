@@ -45,5 +45,5 @@ def handle_exception(e: Exception):
   view = View("error")
   return view.render({
     "reason": e.__str__(),
-    "stacktrace": ''.join(traceback.format_tb(e.__traceback__)),
+    "stacktrace": "".join(traceback.format_tb(e.__traceback__)),
   })
