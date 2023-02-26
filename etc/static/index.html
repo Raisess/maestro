@@ -40,7 +40,11 @@
                     </form>
                     <form action="/logs" method="GET">
                       <input name="job_name" value="{{ name }}" style="display: none;" />
-                      <input class="dropdown-item" type="submit" value="Logs" />
+                      <input class="dropdown-item" type="submit" value="See logs" />
+                    </form>
+                    <form action="/clear-logs" method="POST">
+                      <input name="job_name" value="{{ name }}" style="display: none;" />
+                      <input class="dropdown-item" type="submit" value="Clear logs" />
                     </form>
                   </ul>
                 </td>

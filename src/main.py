@@ -61,13 +61,16 @@ class CheckLogs(Command):
 
 class ClearLogs(Command):
   def __init__(self):
-    super().__init__("clear-logs", "Clear all logs.")
+    super().__init__("clear-logs", "Clear logs.")
 
-  def handle(self, _: list[str]) -> None:
-    prompt = input("Are you sure you want to clear all logs? [Y/n] ")
-    if prompt.lower() == "y":
-      LogsManager.ClearAll()
-      print(">>> Logs cleaned!")
+  def handle(self, args: list[str]) -> None:
+    if len(args) > 0:
+      LogsManager.Clear(job_name=args[0])
+    else:
+      prompt = input("Are you sure you want to clear all logs? [Y/n] ")
+      if prompt.lower() == "y":
+        LogsManager.ClearAll()
+        print(">>> Logs cleaned!")
 
 
 class Serve(Command):

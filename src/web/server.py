@@ -33,6 +33,13 @@ def logs() -> str:
   return view.render({ "name": job_name, "logs": all_logs })
 
 
+@app.route("/clear-logs", methods = ["POST"])
+def clear_logs() -> None:
+  job_name = request.form.get("job_name")
+  LogsManager.Clear(job_name)
+  return redirect("/")
+
+
 @app.errorhandler(Exception)
 def handle_exception(e: Exception):
   view = View("error")
