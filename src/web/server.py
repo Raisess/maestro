@@ -13,7 +13,7 @@ def home() -> str:
   return view.render({ "jobs": enumerate(JobsManager.List()) })
 
 
-@app.route("/run", methods = ["POST"])
+@app.route("/jobs/run", methods = ["POST"])
 def run() -> None:
   job_name = request.form.get("job_name")
   job = JobsManager.Load(job_name)
@@ -21,7 +21,7 @@ def run() -> None:
   return redirect("/")
 
 
-@app.route("/remove", methods = ["POST"])
+@app.route("/jobs/remove", methods = ["POST"])
 def remove() -> None:
   job_name = request.form.get("job_name")
   JobsManager.Remove(job_name)
@@ -40,7 +40,7 @@ def logs() -> str:
   return view.render({ "name": job_name, "logs": all_logs })
 
 
-@app.route("/clear-logs", methods = ["POST"])
+@app.route("/logs/clear", methods = ["POST"])
 def clear_logs() -> None:
   job_name = request.form.get("job_name")
   LogsManager.Clear(job_name)
