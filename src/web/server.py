@@ -3,9 +3,15 @@ from flask import Flask, redirect, request
 
 from jobs_manager import JobsManager
 from logs_manager import LogsManager
+from web.auth import Auth
 from web.view import View
 
 app = Flask(__name__)
+
+@app.before_request
+def auth() -> None:
+  Auth.Handle(request)
+
 
 @app.route("/", methods = ["GET"])
 def home() -> str:
