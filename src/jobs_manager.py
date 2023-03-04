@@ -41,8 +41,11 @@ class JobsManager:
     return Job(name, job_data.get("command"), job_data.get("pid"))
 
   @staticmethod
-  def List() -> list[tuple[str, str]]:
-    return JobsManager.__GetJobsFromFile().items()
+  def List() -> list[Job]:
+    return [
+      Job(job_data[0], job_data[1].get("command"), job_data[1].get("pid"))
+      for job_data in JobsManager.__GetJobsFromFile().items()
+    ]
 
   @staticmethod
   def Remove(name: str) -> None:

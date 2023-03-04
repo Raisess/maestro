@@ -20,42 +20,57 @@
               <th scope="col">#</th>
               <th scope="col">Name</th>
               <th scope="col">Command</th>
+              <th scope="col">Status</th>
               <th scope="col">Handle</th>
             </tr>
           </thead>
           <tbody>
-            {%- for idx, (name, data) in jobs %}
+            {% for idx, job in jobs %}
               <tr>
                 <td>{{ idx }}</td>
-                <td>{{ name }}</td>
+                <td>{{ job.get_name() }}</td>
                 <td>
-                  <code class="bg-secondary text-light rounded-1 p-2">{{ data.get("command") }}</code>
+                  <code class="bg-secondary text-light rounded-1 p-2">{{ job.get_command() }}</code>
+                </td>
+                <td>
+                  {% if job.status() == 1 %}
+                    <span class="badge text-bg-success">Running</span>
+                  {% else %}
+                    <span class="badge text-bg-danger">Stopped</span>
+                  {% endif %}
                 </td>
                 <td>
                   <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                     Actions
                   </button>
                   <ul class="dropdown-menu">
-                    <form action="/jobs/run" method="POST">
-                      <input name="job_name" value="{{ name }}" style="display: none;" />
-                      <input class="dropdown-item" type="submit" value="Run" />
-                    </form>
+                    {% if job.status() == 1 %}
+                      <form action="/jobs/kill" method="POST">
+                        <input name="job_name" value="{{ job.get_name() }}" style="display: none;" />
+                        <input class="dropdown-item" type="submit" value="Kill" />
+                      </form>
+                    {% else %}
+                      <form action="/jobs/run" method="POST">
+                        <input name="job_name" value="{{ job.get_name() }}" style="display: none;" />
+                        <input class="dropdown-item" type="submit" value="Run" />
+                      </form>
+                    {% endif %}
                     <form action="/jobs/remove" method="POST">
-                      <input name="job_name" value="{{ name }}" style="display: none;" />
+                      <input name="job_name" value="{{ job.get_name() }}" style="display: none;" />
                       <input class="dropdown-item" type="submit" value="Remove" />
                     </form>
                     <form action="/logs" method="GET">
-                      <input name="job_name" value="{{ name }}" style="display: none;" />
+                      <input name="job_name" value="{{ job.get_name() }}" style="display: none;" />
                       <input class="dropdown-item" type="submit" value="See logs" />
                     </form>
                     <form action="/logs/clear" method="POST">
-                      <input name="job_name" value="{{ name }}" style="display: none;" />
+                      <input name="job_name" value="{{ job.get_name() }}" style="display: none;" />
                       <input class="dropdown-item" type="submit" value="Clear logs" />
                     </form>
                   </ul>
                 </td>
               </div>
-            {%- endfor %}
+            {% endfor %}
           </tbody>
         </table>
       </div>

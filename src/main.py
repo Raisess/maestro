@@ -46,9 +46,8 @@ class ListJobs(Command):
 
   def handle(self, _: list[str]) -> None:
     print(">>> Available jobs:")
-    for (job_name, job_data) in JobsManager.List():
-      job_command = job_data.get("command")
-      print(f">>>>>> {job_name}: {job_command}")
+    for job in JobsManager.List():
+      print(f">>>>>> {job.get_name()}: {job.get_command()} | Status: {job.status()}")
 
 
 class CheckLogs(Command):

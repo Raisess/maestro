@@ -24,6 +24,15 @@ def run() -> None:
   job_name = request.form.get("job_name")
   job = JobsManager.Load(job_name)
   job.run()
+  JobsManager.Save(job)
+  return redirect("/")
+
+
+@app.route("/jobs/kill", methods = ["POST"])
+def kill() -> None:
+  job_name = request.form.get("job_name")
+  job = JobsManager.Load(job_name)
+  job.kill()
   return redirect("/")
 
 
