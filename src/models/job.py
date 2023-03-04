@@ -1,4 +1,5 @@
 import os
+import signal
 import subprocess
 import time
 from dataclasses import dataclass
@@ -38,7 +39,7 @@ class Job:
     if self.status() == JobStatus.STOPPED:
       raise Exception("Process not running, or it can be using another PID")
 
-    os.kill(self.__pid)
+    os.kill(self.__pid, signal.SIGKILL)
 
   def status(self) -> JobStatus:
     if self.__pid == 0:
