@@ -92,7 +92,9 @@ class Serve(Command):
 
   def handle(self, args: list[str]) -> None:
     from web.server import app
-    app.run(port=int(args[0]) if len(args) > 0 else 6969)
+    port = int(args[0]) if len(args) > 0 else 6969
+    host = args[1] if len(args) > 1 else "127.0.0.1"
+    app.run(host, port)
 
 
 if __name__ == "__main__":
