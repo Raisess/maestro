@@ -32,9 +32,6 @@ class Job:
     self.__pid = int(stdout) + 1
     time.sleep(1)
 
-    if self.status() != JobStatus.RUNNING:
-      raise Exception("Process failed to start")
-
   def kill(self) -> None:
     if self.status() == JobStatus.STOPPED:
       raise Exception("Process not running, or it can be using another PID")
