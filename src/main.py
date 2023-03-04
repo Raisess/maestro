@@ -27,6 +27,7 @@ class RunJob(Command):
   def handle(self, args: list[str]) -> None:
     job = JobsManager.Load(name=args[0])
     job.run()
+    JobsManager.Save(job)
     print(">>> Job started successfully!")
 
 

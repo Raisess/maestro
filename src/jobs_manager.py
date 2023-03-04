@@ -26,16 +26,19 @@ class JobsManager:
   @staticmethod
   def Save(job: Job) -> None:
     data = JobsManager.__GetJobsFromFile()
-    data[job.get_name()] = job.get_command()
+    data[job.get_name()] = {
+      "command": job.get_command(),
+      "pid": job.get_pid(),
+    }
     JobsManager.__UpdateJobsInFile(data)
 
   @staticmethod
   def Load(name: str) -> Job:
-    job_command = JobsManager.__GetJobsFromFile().get(name)
-    if not job_command:
+    job_data = JobsManager.__GetJobsFromFile().get(name)
+    if not job_data:
       raise Exception("Job not found")
 
-    return Job(name, job_command)
+    return Job(name, job_data.get("command"), job_data.get("pid"))
 
   @staticmethod
   def List() -> list[tuple[str, str]]:
