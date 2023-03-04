@@ -24,5 +24,4 @@ class Auth:
   @staticmethod
   def Handle(request: Request) -> None:
     if not IPWhitelist.IsValid(request.remote_addr):
-      print(f"[WARN] Unauthorized access try from: {request.remote_addr}")
       raise Exception("Not authorized")
