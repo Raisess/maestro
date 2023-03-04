@@ -12,9 +12,7 @@ class LogsManager:
       files = LogsManager.__GetSortedFiles(dir_path)
       for filename in files:
         with open(f"{dir_path}/{filename}", "r") as log_file:
-          data = log_file.read().split("\n")
-          data.reverse()
-          all_logs.append(Log(filename, "\n".join(data)))
+          all_logs.append(Log(filename, log_file.read()))
 
     return all_logs
 
