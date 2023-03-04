@@ -24,12 +24,12 @@
             </tr>
           </thead>
           <tbody>
-            {%- for idx, (name, command) in jobs %}
+            {%- for idx, (name, data) in jobs %}
               <tr>
                 <td>{{ idx }}</td>
                 <td>{{ name }}</td>
                 <td>
-                  <code class="bg-secondary text-light rounded-1 p-2">{{ command }}</code>
+                  <code class="bg-secondary text-light rounded-1 p-2">{{ data.get("command") }}</code>
                 </td>
                 <td>
                   <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
