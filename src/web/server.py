@@ -64,6 +64,7 @@ def clear_logs() -> None:
 
 @app.errorhandler(Exception)
 def handle_exception(e: Exception):
+  app.logger.error(e)
   view = View("error")
   return view.render({
     "reason": e.__str__(),
