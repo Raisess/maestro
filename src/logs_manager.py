@@ -31,7 +31,7 @@ class LogsManager:
     files = LogsManager.__GetSortedFiles(dir_path)
     for idx, file in enumerate(files):
       path = f"{dir_path}/{file}"
-      if idx == 0:
+      if idx == len(files) - 1:
         LogsManager.__ClearFile(path)
         continue
 
@@ -46,7 +46,6 @@ class LogsManager:
   def __GetSortedFiles(dir_path: str) -> list[str]:
     files = os.listdir(dir_path)
     files.sort()
-    files.reverse()
     return files
 
   @staticmethod
