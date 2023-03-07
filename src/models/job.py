@@ -44,10 +44,9 @@ class Job:
 
     try:
       cmdline_f = open(f"/proc/{self.__pid}/cmdline")
-      job_cmd = "".join(self.__command.split(" "))
-      pid_cmd = "".join(cmdline_f.read().strip().split("\x00"))
+      pid_cmd = cmdline_f.read().replace("\000", " ").strip()
       cmdline_f.close()
-      if job_cmd.__contains__(pid_cmd):
+      if pid_cmd.__contains__(self.__command) or self.__command.__contains__(pid_cmd):
         return JobStatus.RUNNING
 
       return JobStatus.STOPPED
