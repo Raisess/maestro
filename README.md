@@ -1,6 +1,6 @@
 # Maestro
 
-This is a simple cli and web app to manage background jobs (processes). [Only for Linux and MacOS]
+This is a simple cli and web app to manage background jobs (processes). [Only for Linux]
 
 ## How to use?
 
