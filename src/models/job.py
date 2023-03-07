@@ -36,7 +36,8 @@ class Job:
     if self.status() == JobStatus.STOPPED:
       raise Exception("Process not running, or it can be using another PID")
 
-    os.kill(self.__pid, signal.SIGKILL)
+    os.kill(self.__pid, signal.SIGTERM)
+    time.sleep(1)
 
   def status(self) -> JobStatus:
     if self.__pid == 0:
