@@ -47,7 +47,7 @@ class Job:
       job_cmd = "".join(self.__command.split(" "))
       pid_cmd = "".join(cmdline_f.read().strip().split("\x00"))
       cmdline_f.close()
-      if job_cmd == pid_cmd:
+      if job_cmd.__contains__(pid_cmd):
         return JobStatus.RUNNING
 
       return JobStatus.STOPPED
