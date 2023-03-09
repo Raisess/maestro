@@ -20,6 +20,12 @@ maestro run <name>
 
 - NOTE: You have to create a job before running.
 
+**kill**: Kill a job.
+
+```shell
+maestro kill <name>
+```
+
 **list**: List all created jobs.
 
 ```shell
@@ -43,7 +49,7 @@ maestro clear-logs
 **serve**: Create a local server providing a web interface at `http://localhost:<port>`.
 
 ```shell
-maestro serve [port]
+maestro serve [port] [host]
 ```
 
 - NOTE: default `port` value is: `6969`.

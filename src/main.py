@@ -31,6 +31,16 @@ class RunJob(Command):
     print(">>> Job started successfully!")
 
 
+class KillJob(Command):
+  def __init__(self):
+    super().__init__("kill", "Kill a job.\n\t\tE.g.: maestro kill <name>", args_len=1)
+
+  def handle(self, args: list[str]) -> None:
+    job = JobsManager.Load(name=args[0])
+    job.kill()
+    print(">>> Job killed successfully!")
+
+
 class RemoveJob(Command):
   def __init__(self):
     super().__init__("remove", "Remove a job.\n\t\tE.g.: maestro remove <name>", args_len=1)
@@ -102,6 +112,7 @@ if __name__ == "__main__":
   cli = CLI("maestro", [
     CreateJob(),
     RunJob(),
+    KillJob(),
     RemoveJob(),
     ListJobs(),
     CheckLogs(),
