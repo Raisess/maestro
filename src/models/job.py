@@ -3,6 +3,7 @@ import signal
 import subprocess
 import time
 from dataclasses import dataclass
+from uuid import uuid4
 
 from env import LOGS_DIR_PATH
 
@@ -59,7 +60,4 @@ class Job:
     if not os.path.isdir(path):
       os.mkdir(path)
 
-    return f"{path}/{self.__timestamp()}"
-
-  def __timestamp(self) -> int:
-    return int(time.time_ns() / 100000)
+    return f"{path}/{str(uuid4())}"
