@@ -57,7 +57,9 @@ class ListJobs(Command):
   def handle(self, _: list[str]) -> None:
     print(">>> Available jobs:")
     for job in JobsManager.List():
-      print(f">>>>>> {job.get_name()}: {job.get_command()} | State: {job.state()}")
+      cpu_usage = "%.2f" % job.cpu_usage()
+      state = "Running" if job.state() == 1 else "Stopped"
+      print(f">>>>>> {job.get_name()}: {job.get_command()} | CPU: {cpu_usage} | State: {state}")
 
 
 class CheckLogs(Command):

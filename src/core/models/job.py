@@ -29,25 +29,45 @@ class Job:
     return self.__pid
 
   def run(self) -> None:
-    stdout = subprocess.getoutput(f"{self.__command} > {self.__get_logfile_path()} 2>&1 | echo $$ &")
+    path = f"{LOGS_DIR_PATH}/{self.__name}"
+    if not os.path.isdir(path):
+      os.mkdir(path)
+
+    logfile_path = f"{path}/{str(uuid4())}"
+    stdout = subprocess.getoutput(f"{self.__command} > {logfile_path} 2>&1 | echo $$ &")
     self.__pid = int(stdout) + 1
     time.sleep(1)
 
   def kill(self) -> None:
-    if self.state() == JobState.STOPPED:
-      raise Exception("Process not running, or it can be using another PID")
-
+    self.__ensure_running()
     os.kill(self.__pid, signal.SIGTERM)
     time.sleep(1)
+
+  def cpu_usage(self) -> float:
+    try:
+      self.__ensure_running()
+    except:
+      return 0
+
+    stat = self.__get_procfile("stat").split(" ")
+    clock_tick = int(subprocess.getoutput("getconf CLK_TCK"))
+    proc_utime = float(stat[13]) / clock_tick
+    proc_stime = float(stat[14]) / clock_tick
+    proc_start_time = float(stat[21]) / clock_tick
+
+    with open("/proc/uptime", "r") as file:
+      sys_uptime = float(file.readline().split(" ")[0])
+
+    proc_elapsed_time = sys_uptime - proc_start_time
+    proc_usage = ((proc_utime + proc_stime) * 100) / proc_elapsed_time
+    return proc_usage
 
   def state(self) -> JobState:
     if self.__pid == 0:
       return JobState.STOPPED
 
     try:
-      cmdline_f = open(f"/proc/{self.__pid}/cmdline")
-      pid_cmd = cmdline_f.read().replace("\000", " ").strip()
-      cmdline_f.close()
+      pid_cmd = self.__get_procfile("cmdline").replace("\000", " ")
       if pid_cmd.__contains__(self.__command) or self.__command.__contains__(pid_cmd):
         return JobState.RUNNING
 
@@ -55,9 +75,12 @@ class Job:
     except:
       return JobState.STOPPED
 
-  def __get_logfile_path(self) -> str:
-    path = f"{LOGS_DIR_PATH}/{self.__name}"
-    if not os.path.isdir(path):
-      os.mkdir(path)
+  def __get_procfile(self, file: str) -> str:
+    with open(f"/proc/{self.__pid}/{file}", "r") as file:
+      content = file.read().strip()
 
-    return f"{path}/{str(uuid4())}"
+    return content
+
+  def __ensure_running(self) -> None:
+    if self.state() == JobState.STOPPED:
+      raise Exception("Process not running, or it can be using another PID")

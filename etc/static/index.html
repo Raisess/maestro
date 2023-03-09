@@ -20,6 +20,7 @@
               <th scope="col">#</th>
               <th scope="col">Name</th>
               <th scope="col">Command</th>
+              <th scope="col">CPU %</th>
               <th scope="col">State</th>
               <th scope="col">Handle</th>
             </tr>
@@ -32,6 +33,7 @@
                 <td>
                   <code class="bg-secondary text-light rounded-1 p-2">{{ job.get_command() }}</code>
                 </td>
+                <td>{{ "%.2f" % job.cpu_usage() }}</td>
                 <td>
                   {% if job.state() == 1 %}
                     <span class="badge text-bg-success">Running</span>
