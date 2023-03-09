@@ -2,8 +2,8 @@ import json
 import os
 import shutil
 
+from core.models.job import Job
 from env import DEFAULT_DIR_PATH, JOBS_FILE_PATH, LOGS_DIR_PATH
-from models.job import Job
 
 class JobsManager:
   @staticmethod

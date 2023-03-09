@@ -1,8 +1,8 @@
 import traceback
 from flask import Flask, redirect, request
 
-from jobs_manager import JobsManager
-from logs_manager import LogsManager
+from core.managers.jobs_manager import JobsManager
+from core.managers.logs_manager import LogsManager
 from web.auth import Auth
 from web.view import View
 
