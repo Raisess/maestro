@@ -20,7 +20,7 @@
               <th scope="col">#</th>
               <th scope="col">Name</th>
               <th scope="col">Command</th>
-              <th scope="col">Status</th>
+              <th scope="col">State</th>
               <th scope="col">Handle</th>
             </tr>
           </thead>
@@ -33,7 +33,7 @@
                   <code class="bg-secondary text-light rounded-1 p-2">{{ job.get_command() }}</code>
                 </td>
                 <td>
-                  {% if job.status() == 1 %}
+                  {% if job.state() == 1 %}
                     <span class="badge text-bg-success">Running</span>
                   {% else %}
                     <span class="badge text-bg-danger">Stopped</span>
@@ -44,7 +44,7 @@
                     Actions
                   </button>
                   <ul class="dropdown-menu">
-                    {% if job.status() == 1 %}
+                    {% if job.state() == 1 %}
                       <form action="/jobs/kill" method="POST">
                         <input name="job_name" value="{{ job.get_name() }}" style="display: none;" />
                         <input class="dropdown-item" type="submit" value="Kill" />

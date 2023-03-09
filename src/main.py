@@ -57,7 +57,7 @@ class ListJobs(Command):
   def handle(self, _: list[str]) -> None:
     print(">>> Available jobs:")
     for job in JobsManager.List():
-      print(f">>>>>> {job.get_name()}: {job.get_command()} | Status: {job.status()}")
+      print(f">>>>>> {job.get_name()}: {job.get_command()} | State: {job.state()}")
 
 
 class CheckLogs(Command):

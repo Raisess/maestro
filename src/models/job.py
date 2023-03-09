@@ -8,7 +8,7 @@ from uuid import uuid4
 from env import LOGS_DIR_PATH
 
 @dataclass
-class JobStatus:
+class JobState:
   STOPPED = 0
   RUNNING = 1
 
@@ -34,26 +34,26 @@ class Job:
     time.sleep(1)
 
   def kill(self) -> None:
-    if self.status() == JobStatus.STOPPED:
+    if self.state() == JobState.STOPPED:
       raise Exception("Process not running, or it can be using another PID")
 
     os.kill(self.__pid, signal.SIGTERM)
     time.sleep(1)
 
-  def status(self) -> JobStatus:
+  def state(self) -> JobState:
     if self.__pid == 0:
-      return JobStatus.STOPPED
+      return JobState.STOPPED
 
     try:
       cmdline_f = open(f"/proc/{self.__pid}/cmdline")
       pid_cmd = cmdline_f.read().replace("\000", " ").strip()
       cmdline_f.close()
       if pid_cmd.__contains__(self.__command) or self.__command.__contains__(pid_cmd):
-        return JobStatus.RUNNING
+        return JobState.RUNNING
 
-      return JobStatus.STOPPED
+      return JobState.STOPPED
     except:
-      return JobStatus.STOPPED
+      return JobState.STOPPED
 
   def __get_logfile_path(self) -> str:
     path = f"{LOGS_DIR_PATH}/{self.__name}"
