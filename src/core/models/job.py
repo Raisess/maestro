@@ -3,7 +3,6 @@ import signal
 import subprocess
 import time
 from dataclasses import dataclass
-from uuid import uuid4
 
 from env import LOGS_DIR_PATH
 
@@ -29,12 +28,7 @@ class Job:
     return self.__pid
 
   def run(self) -> None:
-    path = f"{LOGS_DIR_PATH}/{self.__name}"
-    if not os.path.isdir(path):
-      os.mkdir(path)
-
-    logfile_path = f"{path}/{str(uuid4())}"
-    stdout = subprocess.getoutput(f"{self.__command} > {logfile_path} 2>&1 | echo $$ &")
+    stdout = subprocess.getoutput(f"{self.__command} > {self.__get_logfile_path()} 2>&1 | echo $$ &")
     self.__pid = int(stdout) + 1
     time.sleep(1)
 
@@ -74,6 +68,14 @@ class Job:
       return JobState.STOPPED
     except:
       return JobState.STOPPED
+
+  def __get_logfile_path(self) -> str:
+    path = f"{LOGS_DIR_PATH}/{self.__name}"
+    if not os.path.isdir(path):
+      os.mkdir(path)
+
+    timestamp = int(time.time_ns() / 100000)
+    return f"{path}/{timestamp}"
 
   def __get_procfile(self, file: str) -> str:
     with open(f"/proc/{self.__pid}/{file}", "r") as file:
