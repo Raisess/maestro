@@ -1,14 +1,22 @@
 <!DOCTYPE html>
 <html lang="en" data-bs-theme="dark">
   <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Maestro</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css" rel="stylesheet" />
   </head>
   <body>
-    <header class="bg-success p-2 ps-5">
+    <header class="bg-success p-2 ps-5 d-flex flex-row gap-3">
       <h1><a href="/" class="text-decoration-none text-white">Maestro</a></h1>
+      <div class="d-flex flex-row gap-2 mt-3 ms-3 text-gray">
+        <i class="bi bi-pc-display"></i>
+        <p>Host: {{ host.get_username() }}@{{ host.get_name() }}</p>
+        <p>OS: {{ host.get_os() }}</p>
+        <p>IP: {{ host.get_ip() }}</p>
+        <p>Cores: {{ host.get_cpu_count() }}</p>
+      </div>
     </header>
     <main>
       <div class="mt-3 p-5 container">

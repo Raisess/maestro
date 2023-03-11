@@ -3,10 +3,12 @@ from flask import Flask, redirect, request
 
 from core.managers.jobs_manager import JobsManager
 from core.managers.logs_manager import LogsManager
+from core.models.host import Host
 from web.auth import Auth
 from web.view import View
 
 app = Flask(__name__)
+host = Host()
 
 @app.before_request
 def auth() -> None:
@@ -16,7 +18,10 @@ def auth() -> None:
 @app.route("/", methods = ["GET"])
 def home() -> str:
   view = View("index")
-  return view.render({ "jobs": enumerate(JobsManager.List()) })
+  return view.render({
+    "host": host,
+    "jobs": enumerate(JobsManager.List()),
+  })
 
 
 @app.route("/jobs/run", methods = ["POST"])
@@ -52,7 +57,11 @@ def logs() -> str:
     all_logs.extend([(log.filename(), entry) for entry in log.data()])
 
   view = View("logs")
-  return view.render({ "name": job_name, "logs": all_logs })
+  return view.render({
+    "host": host,
+    "logs": all_logs,
+    "name": job_name,
+  })
 
 
 @app.route("/logs/clear", methods = ["POST"])
