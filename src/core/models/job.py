@@ -35,7 +35,9 @@ class Job:
   def kill(self) -> None:
     self.__ensure_running()
     os.kill(self.__pid, signal.SIGTERM)
-    time.sleep(1)
+
+    while self.state() == JobState.RUNNING:
+      time.sleep(1)
 
   def cpu_usage(self) -> float:
     try:
