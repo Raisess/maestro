@@ -19,7 +19,7 @@
       </div>
     </header>
     <main>
-      <div class="mt-3 p-5 container">
+      <div class="mt-3 p-5 container text-nowrap">
         <h2>Jobs:</h2>
         <hr />
         <table class="table table-dark table-hover">
@@ -38,8 +38,10 @@
               <tr>
                 <td>{{ idx }}</td>
                 <td>{{ job.get_name() }}</td>
-                <td>
-                  <code class="bg-secondary text-light rounded-1 p-2">{{ job.get_command() }}</code>
+                <td style="max-width: 35vw !important; overflow-x: auto;">
+                  <code class="bg-secondary text-light rounded-1 p-2">
+                    {{ job.get_command() }}
+                  </code>
                 </td>
                 <td>{{ "%.2f" % job.cpu_usage() }}</td>
                 <td>
