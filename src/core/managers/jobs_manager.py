@@ -23,14 +23,14 @@ class JobsManager:
 
   @staticmethod
   def Save(job: Job) -> None:
-    json_db.append(JOBS_MODEL, job.get_name(), {
+    json_db.write_key(JOBS_MODEL, job.get_name(), {
       "command": job.get_command(),
       "pid": job.get_pid(),
     })
 
   @staticmethod
   def Load(name: str) -> Job:
-    item = json_db.read(JOBS_MODEL, name)
+    item = json_db.read_key(JOBS_MODEL, name)
     if not item:
       raise Exception("Job not found")
 
@@ -39,14 +39,14 @@ class JobsManager:
   @staticmethod
   def List() -> list[Job]:
     jobs = []
-    for item in json_db.read_batch(JOBS_MODEL).items():
+    for item in json_db.read(JOBS_MODEL).items():
       jobs.append(Job(item[0], item[1].get("command"), item[1].get("pid")))
 
     return jobs
 
   @staticmethod
   def Remove(name: str) -> None:
-    json_db.delete(JOBS_MODEL, name)
+    json_db.delete_key(JOBS_MODEL, name)
     logs_path = f"{LOGS_DIR_PATH}/{name}"
     if os.path.isdir(logs_path):
       shutil.rmtree(logs_path)

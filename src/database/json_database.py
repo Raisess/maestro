@@ -5,31 +5,41 @@ class JsonDatabase:
   def __init__(self, path: str):
     self.__path = path
 
-  def append(self, model: str, key: str, data: any) -> None:
+  def write(self, model: str, data: any) -> None:
+    with open(self.__fullpath(model), "w") as file:
+      file.write(json.dumps(data))
+
+  def write_key(self, model: str, key: str, value: any) -> None:
     if not os.path.isfile(self.__fullpath(model)):
-      self.__write(model, {})
+      self.write(model, { f"{key}": value })
+      return
 
-    content = self.read_batch(model)
-    content[key] = data
-    self.__write(model, content)
+    content = self.read(model)
+    content[key] = value
+    self.write(model, content)
 
-  def read(self, model: str, key: str) -> any:
-    return self.read_batch(model).get(key)
-
-  def read_batch(self, model: str) -> dict[str, any]:
+  def read(self, model: str) -> dict[str, any]:
+    self.__ensure_model(model)
     with open(self.__fullpath(model), "r") as file:
       content = json.load(file)
 
     return content
 
-  def delete(self, model: str, key: str) -> None:
-    content = self.read_batch(model)
-    content.pop(key)
-    self.__write(model, content)
+  def read_key(self, model: str, key: str) -> any:
+    return self.read(model).get(key)
 
-  def __write(self, model: str, data: any) -> None:
-    with open(self.__fullpath(model), "w") as file:
-      file.write(json.dumps(data))
+  def delete(self, model: str) -> None:
+    self.__ensure_model(model)
+    os.remove(self.__fullpath(model))
+
+  def delete_key(self, model: str, key: str) -> None:
+    content = self.read(model)
+    content.pop(key)
+    self.write(model, content)
+
+  def __ensure_model(self, model: str) -> None:
+    if not os.path.isfile(self.__fullpath(model)):
+      raise Exception("Model do not exists")
 
   def __fullpath(self, model: str) -> str:
     return f"{self.__path}/{model}.json"
