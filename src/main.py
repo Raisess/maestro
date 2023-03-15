@@ -38,6 +38,7 @@ class KillJob(Command):
   def handle(self, args: list[str]) -> None:
     job = JobsManager.Load(name=args[0])
     job.kill()
+    JobsManager.Save(job)
     print(">>> Job killed successfully!")
 
 

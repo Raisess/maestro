@@ -39,6 +39,8 @@ class Job:
     while self.state() == JobState.RUNNING:
       time.sleep(1)
 
+    self.__pid = 0
+
   def cpu_usage(self) -> float:
     try:
       self.__ensure_running()

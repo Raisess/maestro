@@ -49,6 +49,7 @@ def kill() -> None:
   job_name = request.form.get("job_name")
   job = JobsManager.Load(job_name)
   job.kill()
+  JobsManager.Save(job)
   return redirect("/")
 
 
