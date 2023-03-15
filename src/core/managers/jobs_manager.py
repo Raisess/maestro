@@ -3,7 +3,11 @@ import os
 import shutil
 
 from core.models.job import Job
+from database.json_database import JsonDatabase
 from env import DEFAULT_DIR_PATH, JOBS_FILE_PATH, LOGS_DIR_PATH
+
+JOBS_MODEL = "jobs"
+json_db = JsonDatabase(DEFAULT_DIR_PATH)
 
 class JobsManager:
   @staticmethod
@@ -13,61 +17,36 @@ class JobsManager:
       if not os.path.isdir(path):
         os.mkdir(path)
 
-    files = [JOBS_FILE_PATH]
-    for path in files:
-      if not os.path.isfile(path):
-        file = open(path, "w")
-        file.close()
-
   @staticmethod
   def Create(name: str, command: str) -> Job:
     return Job(name, command)
 
   @staticmethod
   def Save(job: Job) -> None:
-    data = JobsManager.__GetJobsFromFile()
-    data[job.get_name()] = {
+    json_db.append(JOBS_MODEL, job.get_name(), {
       "command": job.get_command(),
       "pid": job.get_pid(),
-    }
-    JobsManager.__UpdateJobsInFile(data)
+    })
 
   @staticmethod
   def Load(name: str) -> Job:
-    job_data = JobsManager.__GetJobsFromFile().get(name)
-    if not job_data:
+    item = json_db.read(JOBS_MODEL, name)
+    if not item:
       raise Exception("Job not found")
 
-    return Job(name, job_data.get("command"), job_data.get("pid"))
+    return Job(name, item.get("command"), item.get("pid"))
 
   @staticmethod
   def List() -> list[Job]:
-    return [
-      Job(job_data[0], job_data[1].get("command"), job_data[1].get("pid"))
-      for job_data in JobsManager.__GetJobsFromFile().items()
-    ]
+    jobs = []
+    for item in json_db.read_batch(JOBS_MODEL).items():
+      jobs.append(Job(item[0], item[1].get("command"), item[1].get("pid")))
+
+    return jobs
 
   @staticmethod
   def Remove(name: str) -> None:
-    data = JobsManager.__GetJobsFromFile()
-    data.pop(name)
-    JobsManager.__UpdateJobsInFile(data)
-
+    json_db.delete(JOBS_MODEL, name)
     logs_path = f"{LOGS_DIR_PATH}/{name}"
     if os.path.isdir(logs_path):
       shutil.rmtree(logs_path)
-
-  @staticmethod
-  def __GetJobsFromFile() -> dict[str, str]:
-    content = "{}"
-    with open(JOBS_FILE_PATH, "r") as file:
-      data = file.read()
-      if data != "":
-        content = data
-
-    return json.loads(content)
-
-  @staticmethod
-  def __UpdateJobsInFile(data: dict[str, str]) -> None:
-    with open(JOBS_FILE_PATH, "w") as file:
-      file.write(json.dumps(data))
