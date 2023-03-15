@@ -1,27 +1,38 @@
-import json
 import os
+from datetime import timedelta
+from flask import session
+from uuid import uuid4 as uuid
 
-from flask import Request
+from database.json_database import JsonDatabase
 
-PATH = "etc/whitelist.json" if os.path.isfile("etc/whitelist.json") else "/usr/local/etc/maestro/whitelist.json"
-
-class IPWhitelist:
-  __List: list[str] = None
-
-  @staticmethod
-  def IsValid(ip: str) -> bool:
-    IPWhitelist.__Load()
-    return True if ip in IPWhitelist.__List else False
-
-  @staticmethod
-  def __Load() -> None:
-    if not IPWhitelist.__List:
-      with open(PATH, "r") as file:
-        IPWhitelist.__List = json.load(file)
-
+SESSION_DURATION_MINUTES = 60
 
 class Auth:
   @staticmethod
-  def Handle(request: Request) -> None:
-    if not IPWhitelist.IsValid(request.remote_addr):
-      raise Exception(f"Not authorized access try from: {request.remote_addr}")
+  def SecretKey() -> str:
+    return str(uuid())
+
+  @staticmethod
+  def SessionLifetime() -> timedelta:
+    return timedelta(minutes=SESSION_DURATION_MINUTES)
+
+  def __init__(self):
+    path = "etc" if os.path.isdir("etc") else "/usr/local/etc/maestro"
+    self.__auth_db = JsonDatabase(path)
+
+  def login(self, password: str) -> bool:
+    if password == self.__auth_db.read("password", "value"):
+      session["id"] = str(uuid())
+      self.__auth_db.append("session", "id", session["id"])
+      return True
+
+    return False
+
+  def is_session_valid(self) -> bool:
+    try:
+      if session.get("id") == self.__auth_db.read("session", "id"):
+        return True
+
+      return False
+    except:
+      return False

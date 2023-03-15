@@ -5,7 +5,7 @@ class JsonDatabase:
   def __init__(self, path: str):
     self.__path = path
 
-  def append(self, model: str, key: str, data: dict) -> None:
+  def append(self, model: str, key: str, data: any) -> None:
     if not os.path.isfile(self.__fullpath(model)):
       self.__write(model, {})
 
@@ -13,10 +13,10 @@ class JsonDatabase:
     content[key] = data
     self.__write(model, content)
 
-  def read(self, model: str, key: str) -> dict | None:
+  def read(self, model: str, key: str) -> any:
     return self.read_batch(model).get(key)
 
-  def read_batch(self, model: str) -> dict[str, dict]:
+  def read_batch(self, model: str) -> dict[str, any]:
     with open(self.__fullpath(model), "r") as file:
       content = json.load(file)
 
@@ -27,7 +27,7 @@ class JsonDatabase:
     content.pop(key)
     self.__write(model, content)
 
-  def __write(self, model: str, data: dict) -> None:
+  def __write(self, model: str, data: any) -> None:
     with open(self.__fullpath(model), "w") as file:
       file.write(json.dumps(data))
 

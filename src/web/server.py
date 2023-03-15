@@ -8,13 +8,24 @@ from web.auth import Auth
 from web.view import View
 
 app = Flask(__name__)
+app.secret_key = Auth.SecretKey()
+app.permanent_session_lifetime = Auth.SessionLifetime()
+auth = Auth()
 host = Host()
 
-@app.before_request
-def auth() -> None:
-  Auth.Handle(request)
+# --> Login
+@app.route("/login", methods = ["GET", "POST"])
+def login() -> str:
+  if request.method == "POST":
+    password = request.form.get("password")
+    if auth.login(password):
+      return redirect("/")
+
+  view = View("login")
+  return view.render()
 
 
+# --> Jobs
 @app.route("/", methods = ["GET"])
 def home() -> str:
   view = View("index")
@@ -48,6 +59,7 @@ def remove() -> None:
   return redirect("/")
 
 
+# --> Logs
 @app.route("/logs", methods = ["GET"])
 def logs() -> str:
   job_name = request.args.get("job_name")
@@ -69,6 +81,14 @@ def clear_logs() -> None:
   job_name = request.form.get("job_name")
   LogsManager.Clear(job_name)
   return redirect("/")
+
+
+# --> Handlers
+@app.before_request
+def authentiaction() -> None:
+  if request.path != "/login":
+    if not auth.is_session_valid():
+      return redirect("/login")
 
 
 @app.errorhandler(Exception)
