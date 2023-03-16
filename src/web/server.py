@@ -16,13 +16,16 @@ host = Host()
 # --> Login
 @app.route("/login", methods = ["GET", "POST"])
 def login() -> str:
+  failed_try = False
   if request.method == "POST":
     password = request.form.get("password")
     if auth.login(password):
       return redirect("/")
 
+    failed_try = True
+
   view = View("login")
-  return view.render()
+  return view.render({ "failed_try": failed_try })
 
 
 # --> Jobs
