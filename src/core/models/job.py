@@ -4,7 +4,7 @@ import subprocess
 import time
 from dataclasses import dataclass
 
-from env import LOGS_DIR_PATH
+from common.env import LOGS_DIR_PATH
 
 @dataclass
 class JobState:

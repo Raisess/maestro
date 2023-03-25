@@ -2,9 +2,9 @@ import json
 import os
 import shutil
 
+from common.env import DEFAULT_DIR_PATH, JOBS_FILE_PATH, LOGS_DIR_PATH
 from core.models.job import Job
 from database.json_database import JsonDatabase
-from env import DEFAULT_DIR_PATH, JOBS_FILE_PATH, LOGS_DIR_PATH
 
 JOBS_MODEL = "jobs"
 json_db = JsonDatabase(DEFAULT_DIR_PATH)

@@ -1,7 +1,7 @@
 import os
 
+from common.env import LOGS_DIR_PATH
 from core.models.log import Log
-from env import LOGS_DIR_PATH
 
 class LogsManager:
   @staticmethod
