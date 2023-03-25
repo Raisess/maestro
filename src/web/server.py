@@ -41,18 +41,14 @@ def home() -> str:
 @app.route("/jobs/run", methods = ["POST"])
 def run() -> None:
   job_name = request.form.get("job_name")
-  job = JobsManager.Load(job_name)
-  job.run()
-  JobsManager.Save(job)
+  JobsManager.Run(job_name)
   return redirect("/")
 
 
 @app.route("/jobs/kill", methods = ["POST"])
 def kill() -> None:
   job_name = request.form.get("job_name")
-  job = JobsManager.Load(job_name)
-  job.kill()
-  JobsManager.Save(job)
+  JobsManager.Kill(job_name)
   return redirect("/")
 
 

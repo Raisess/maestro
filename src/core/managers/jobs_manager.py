@@ -18,8 +18,20 @@ class JobsManager:
         os.mkdir(path)
 
   @staticmethod
-  def Create(name: str, command: str) -> Job:
-    return Job(name, command)
+  def Create(name: str, command: str) -> None:
+    JobsManager.Save(Job(name, command))
+
+  @staticmethod
+  def Run(name: str) -> None:
+    job = JobsManager.Load(name)
+    job.run()
+    JobsManager.Save(job)
+
+  @staticmethod
+  def Kill(name: str) -> None:
+    job = JobsManager.Load(name)
+    job.kill()
+    JobsManager.Save(job)
 
   @staticmethod
   def Save(job: Job) -> None:

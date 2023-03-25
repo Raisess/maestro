@@ -13,8 +13,7 @@ class CreateJob(Command):
 
   def handle(self, args: list[str]) -> None:
     JobsManager.InitPath()
-    job = JobsManager.Create(name=args[0], command=args[1])
-    JobsManager.Save(job)
+    JobsManager.Create(name=args[0], command=args[1])
     print(">>> Job created successfully!")
 
 
@@ -23,9 +22,7 @@ class RunJob(Command):
     super().__init__("run", "Start a job.\n\t\tE.g.: maestro run <name>", args_len=1)
 
   def handle(self, args: list[str]) -> None:
-    job = JobsManager.Load(name=args[0])
-    job.run()
-    JobsManager.Save(job)
+    JobsManager.Run(name=args[0])
     print(">>> Job started successfully!")
 
 
@@ -34,9 +31,7 @@ class KillJob(Command):
     super().__init__("kill", "Kill a job.\n\t\tE.g.: maestro kill <name>", args_len=1)
 
   def handle(self, args: list[str]) -> None:
-    job = JobsManager.Load(name=args[0])
-    job.kill()
-    JobsManager.Save(job)
+    JobsManager.Kill(name=args[0])
     print(">>> Job killed successfully!")
 
 
