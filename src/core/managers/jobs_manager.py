@@ -11,7 +11,7 @@ json_db = JsonDatabase(DEFAULT_DIR_PATH)
 
 class JobsManager:
   @staticmethod
-  def InitPath() -> None:
+  def Init() -> None:
     dirs = [DEFAULT_DIR_PATH, LOGS_DIR_PATH]
     for path in dirs:
       if not os.path.isdir(path):

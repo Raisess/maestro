@@ -4,6 +4,12 @@ This is a simple cli and web app to manage background jobs (processes). [Only fo
 
 ## How to use?
 
+**init**: Init maestro, create the required folders and files.
+
+```shell
+maestro init
+```
+
 **create**: Create a new job.
 
 ```shell

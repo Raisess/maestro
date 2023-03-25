@@ -6,6 +6,7 @@ from cli.commands import *
 
 if __name__ == "__main__":
   cli = CLI("maestro", [
+    Init(),
     CreateJob(),
     RunJob(),
     KillJob(),

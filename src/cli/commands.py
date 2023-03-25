@@ -3,6 +3,15 @@ from yacli import Command
 from core.managers.jobs_manager import JobsManager
 from core.managers.logs_manager import LogsManager
 
+class Init(Command):
+  def __init__(self):
+    super().__init__("init", "Create the required folders and files", args_len=0)
+
+  def handle(self, _) -> None:
+    JobsManager.Init()
+    print(">>> Maestro initiated successfully!")
+
+
 class CreateJob(Command):
   def __init__(self):
     super().__init__(
@@ -12,7 +21,6 @@ class CreateJob(Command):
     )
 
   def handle(self, args: list[str]) -> None:
-    JobsManager.InitPath()
     JobsManager.Create(name=args[0], command=args[1])
     print(">>> Job created successfully!")
 
