@@ -3,9 +3,8 @@ from datetime import timedelta
 from flask import session
 from uuid import uuid4 as uuid
 
+from common.env import WEB_SESSION_DURATION_MINUTES
 from database.json_database import JsonDatabase
-
-SESSION_DURATION_MINUTES = 60
 
 class Auth:
   @staticmethod
@@ -14,7 +13,7 @@ class Auth:
 
   @staticmethod
   def SessionLifetime() -> timedelta:
-    return timedelta(minutes=SESSION_DURATION_MINUTES)
+    return timedelta(minutes=WEB_SESSION_DURATION_MINUTES)
 
   def __init__(self):
     path = "etc" if os.path.isdir("etc") else "/usr/local/etc/maestro"
