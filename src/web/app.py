@@ -63,15 +63,10 @@ def remove() -> None:
 @app.route("/logs", methods = ["GET"])
 def logs() -> str:
   job_name = request.args.get("job_name")
-  logs = LogsManager.List(job_name)
-  all_logs = []
-  for log in logs:
-    all_logs.append([log.filename(), log.data()])
-
   view = View("logs")
   return view.render({
     "host": host,
-    "logs": all_logs,
+    "logs": LogsManager.ShowList(job_name),
     "name": job_name,
   })
 

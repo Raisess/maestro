@@ -5,6 +5,14 @@ from core.models.log import Log
 
 class LogsManager:
   @staticmethod
+  def ShowList(job_name: str) -> list[str]:
+    logs = []
+    for log in LogsManager.List(job_name):
+      logs.append(f"{log.filename()} | ==========================================================")
+      logs.append(log.data())
+    return logs
+
+  @staticmethod
   def List(job_name: str) -> list[Log]:
     all_logs = []
     if os.path.isdir(LOGS_DIR_PATH):

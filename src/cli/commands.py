@@ -74,12 +74,7 @@ class CheckLogs(Command):
 
   def handle(self, args: list[str]) -> None:
     import os
-
-    logs = []
-    for log in LogsManager.List(job_name=args[0]):
-      logs.append(f"{log.filename()} | {log.data()}")
-
-    logs_txt = "\n".join(logs)
+    logs_txt = "\n".join(LogsManager.ShowList(job_name=args[0]))
     os.system(f"echo \"{logs_txt}\" | less +G")
 
 
