@@ -8,7 +8,7 @@ from web.auth import Auth
 from web.view import View
 
 app = Flask(__name__)
-app.secret_key = Auth.SecretKey()
+app.secret_key = Auth.SecretSeed()
 app.permanent_session_lifetime = Auth.SessionLifetime()
 auth = Auth()
 host = Host()
@@ -88,6 +88,7 @@ def clear_logs() -> None:
 def authentiaction() -> None:
   if request.path != "/login":
     if not auth.is_session_valid():
+      app.secret_key = Auth.SecretSeed()
       return redirect("/login")
 
 
