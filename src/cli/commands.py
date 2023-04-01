@@ -77,10 +77,10 @@ class CheckLogs(Command):
 
     logs = []
     for log in LogsManager.List(job_name=args[0]):
-      logs.extend([f"{log.filename()} | {entry}" for entry in log.data()])
+      logs.append(f"{log.filename()} | {log.data()}")
 
     logs_txt = "\n".join(logs)
-    os.system(f"echo \"{logs_txt}\" | less")
+    os.system(f"echo \"{logs_txt}\" | less +G")
 
 
 class ClearLogs(Command):

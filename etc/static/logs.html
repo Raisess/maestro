@@ -29,7 +29,9 @@
         <hr />
         <div id="console" class="row rounded-2 p-3" style="max-height: 80vh; overflow-y: scroll; background-color: #000000;">
           {%- for (filename, log) in logs %}
-            <code style="color: #FFFFFF;"><b>{{ filename }} | {{ log }}</b></code>
+            <code style="color: #FFFFFF;">
+              <b style="white-space: pre-line;">{{ filename }} | {{ log }}</b>
+            </code>
           {%- endfor %}
         </div>
       </div>

@@ -66,7 +66,7 @@ def logs() -> str:
   logs = LogsManager.List(job_name)
   all_logs = []
   for log in logs:
-    all_logs.extend([(log.filename(), entry) for entry in log.data()])
+    all_logs.append([log.filename(), log.data()])
 
   view = View("logs")
   return view.render({
