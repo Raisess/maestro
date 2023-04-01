@@ -3,8 +3,8 @@ from datetime import timedelta
 from flask import session
 from uuid import uuid4 as uuid
 
+from common.database.json_database import JsonDatabase
 from common.env import WEB_SESSION_DURATION_MINUTES
-from database.json_database import JsonDatabase
 
 class Auth:
   @staticmethod
