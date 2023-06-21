@@ -36,8 +36,14 @@ class Job:
     self.__ensure_running()
     os.kill(self.__pid, signal.SIGTERM)
 
+    count = 0
     while self.state() == JobState.RUNNING:
+      if count >= 10:
+        print("10 seconds elapsed after SIGTERM, trying SIGKILL...")
+        os.kill(self.__pid, signal.SIGKILL)
+
       time.sleep(1)
+      count += 1
 
     self.__pid = 0
 
